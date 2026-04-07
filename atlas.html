@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catholic Relics Directory</title>
+    <meta
+      name="description"
+      content="Search Catholic relic records by city, saint, shrine, country, access pattern, and collection."
+    />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page-directory">
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="./index.html" aria-label="Catholic Relics Directory home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path
+                d="M12 2l1.9 4.8L19 8.2l-4 3.4 1.2 5.2L12 14.2 7.8 16.8 9 11.6 5 8.2l5.1-1.4L12 2z"
+              ></path>
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>Catholic Relics Directory</strong>
+            <small>Relics, shrines, treasuries, and source-based collections</small>
+          </span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a href="./index.html#destinations">Destinations</a>
+          <a href="./atlas.html">Directory</a>
+          <a href="./index.html#collections">Collections</a>
+          <a href="./index.html#themes">Themes</a>
+          <a href="./index.html#classes">Classes</a>
+        </nav>
+
+        <div class="nav-tools" aria-label="Utility links">
+          <a class="tool-link" href="./atlas.html" aria-label="Open the directory">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M20 20l-4.2-4.2"></path>
+            </svg>
+          </a>
+          <a class="tool-link" href="#footer" aria-label="Open footer links">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M12 12a4 4 0 100-8 4 4 0 000 8z"></path>
+              <path d="M4.5 21a7.5 7.5 0 0115 0"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section directory-hero">
+        <div class="shell directory-hero-grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Directory</p>
+            <h1>Find relic records by city, saint, shrine, relic, or collection.</h1>
+            <p>
+              Enter a city and the directory returns matching records. Each entry explains where the relic
+              is kept, how public access is described, and whether ordinary display or special exposition is
+              known.
+            </p>
+          </div>
+
+          <aside class="directory-aside reveal">
+            <p class="eyebrow">Current import</p>
+            <h2 id="directory-meta-count">Source-based inventory records</h2>
+            <p id="directory-meta-note">
+              This view combines the curated shrine entries with imported published inventories from shrines,
+              dioceses, apostolates, and exposition lists.
+            </p>
+          </aside>
+        </div>
+
+        <div class="shell">
+          <form id="filter-form" class="filter-shell reveal">
+            <label class="field field-wide">
+              <span>City, saint, shrine, relic, country, or collection</span>
+              <input
+                id="query-input"
+                type="search"
+                name="q"
+                placeholder="Rome, Seville, Crown of Thorns, Saint Anthony Chapel, Poland..."
+                autocomplete="off"
+              />
+            </label>
+
+            <label class="field">
+              <span>Class</span>
+              <select id="class-filter" name="class">
+                <option value="all">All classes</option>
+                <option value="first">First-Class</option>
+                <option value="second">Second-Class</option>
+                <option value="associated">Associated relics</option>
+                <option value="collection">Collection records</option>
+                <option value="unspecified">Imported inventory records</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Public access</span>
+              <select id="access-filter" name="access">
+                <option value="all">All access patterns</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Thematic grouping</span>
+              <select id="route-filter" name="route">
+                <option value="all">All groupings</option>
+              </select>
+            </label>
+
+            <div class="filter-actions">
+              <button class="button button-primary" type="submit">Find results</button>
+              <button class="button button-secondary" type="button" id="reset-filters">Reset</button>
+            </div>
+          </form>
+
+          <div class="chip-stack reveal">
+            <p class="chip-title">Popular cities</p>
+            <div id="quick-city-chips" class="chip-row"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div id="results-summary" class="summary-grid"></div>
+        </div>
+      </section>
+
+      <section class="section directory-results">
+        <div class="shell directory-layout">
+          <div class="column">
+            <div class="column-heading">
+              <p class="eyebrow">Cities</p>
+              <h2>Locations in the current result set</h2>
+            </div>
+            <div id="city-guide-grid" class="city-guide-grid"></div>
+          </div>
+
+          <div class="column wide">
+            <div class="column-heading">
+              <p class="eyebrow">Records</p>
+              <h2>Detailed relic entries</h2>
+            </div>
+            <div id="relic-grid" class="relic-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sources" class="section section-lined">
+        <div class="shell">
+          <div class="section-heading narrow reveal">
+            <p class="eyebrow">Sources</p>
+            <h2>Imported source documents used for the larger database.</h2>
+            <p>
+              The imported dataset comes from official shrine lists, apostolate custody lists, diocesan PDFs,
+              and exposition inventories.
+            </p>
+          </div>
+          <div id="source-grid" class="source-grid"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell">
+          <div class="section-heading narrow reveal">
+            <p class="eyebrow">Record format</p>
+            <h2>How the directory writes each entry.</h2>
+          </div>
+          <div class="method-grid">
+            <article class="class-card reveal">
+              <h3>Where it is</h3>
+              <p>
+                Each record states the church, cathedral, basilica, chapel, shrine, museum, treasury, or
+                inventory site where the relic is listed.
+              </p>
+            </article>
+            <article class="class-card reveal">
+              <h3>How to see it</h3>
+              <p>
+                Entries explain whether the item is visible in an ordinary shrine setting, part of a
+                permanent collection, or only published in a custody list.
+              </p>
+            </article>
+            <article class="class-card reveal">
+              <h3>Public display</h3>
+              <p>
+                When feast-day openings or temporary expositions are known, the directory states that
+                clearly. Otherwise it notes that public access is unspecified.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="detail-overlay" class="detail-overlay" hidden>
+      <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+        <button id="detail-close" class="detail-close" type="button" aria-label="Close details">
+          Close
+        </button>
+        <div id="detail-content"></div>
+      </div>
+    </div>
+
+    <footer id="footer" class="site-footer">
+      <div class="shell footer-shell">
+        <div class="footer-brand-block">
+          <a class="brand footer-brand" href="./index.html">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                <path
+                  d="M12 2l1.9 4.8L19 8.2l-4 3.4 1.2 5.2L12 14.2 7.8 16.8 9 11.6 5 8.2l5.1-1.4L12 2z"
+                ></path>
+              </svg>
+            </span>
+            <span class="brand-copy">
+              <strong>Catholic Relics Directory</strong>
+              <small>A reference site for relic shrines, public collections, and source-based inventories.</small>
+            </span>
+          </a>
+
+          <p class="footer-tagline">
+            Search relic records by place, saint, shrine, access pattern, or collection.
+          </p>
+
+          <form id="footer-newsletter" class="newsletter-form">
+            <label class="newsletter-label" for="newsletter-email">Email for updates</label>
+            <div class="newsletter-row">
+              <input id="newsletter-email" type="email" name="email" placeholder="name@example.com" />
+              <button class="button button-primary" type="submit">Stay informed</button>
+            </div>
+            <p id="newsletter-note" class="newsletter-note">Static site demo. No signup data is stored.</p>
+          </form>
+
+          <div class="social-links">
+            <a href="./atlas.html">Directory</a>
+            <a href="#sources">Sources</a>
+            <a href="./index.html#collections">Collections</a>
+          </div>
+        </div>
+
+        <div id="footer-columns" class="footer-columns"></div>
+      </div>
+
+      <div class="shell footer-bottom">
+        <p>
+          Confirm local liturgical schedules, treasury hours, and feast-day openings before visiting in
+          person.
+        </p>
+      </div>
+    </footer>
+
+    <script src="source-database.js"></script>
+    <script src="data.js"></script>
+    <script src="guide.js"></script>
+  </body>
+</html>
